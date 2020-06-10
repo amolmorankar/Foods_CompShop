@@ -1,0 +1,105 @@
+﻿@model Foods_CompShop.Models.CompShop
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>CompShop</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Dept)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.Dept)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ItemNo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WHSE)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.MAC)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sell)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.IMU)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FutureSellPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.FutureSellDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LowestComp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.MaxPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NewSell)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.NewPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SamsConvPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.SamsShelfPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SamsAddtnPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.SamsShoppedURL)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SamsShoppedZip)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.BJsConvPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BJsShelfPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.BJsAddtnPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BJsShoppedURL)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.BJsShoppedZip)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BuyerNo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.Category)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BuyerComments)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.PulledDate)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CompShopId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

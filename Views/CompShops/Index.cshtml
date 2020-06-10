@@ -1,0 +1,958 @@
+﻿@*@model IEnumerable<Foods_CompShop.Models.CompShop>*@
+@model Foods_CompShop.Models.SearchCompShop
+
+@{
+    ViewData["Title"] = "Foods : Comp Shop";
+}
+
+@*<hr style="width:100%;text-align:left;margin-left:0"></hr>*@
+<style>
+    a:hover {
+        background-color: lightgray;
+    }
+
+    .Button {
+        background-color: Aqua;
+        width: 200px;
+        padding: 15px;
+        color: Black;
+        cursor: pointer;
+        text-align: center;
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        behavior: url(/border-radius.htc);
+        border-radius: 10px;
+    }
+
+    .myButton {
+        background-color: #7892c2;
+        border-radius: 28px;
+        border: 1px solid #4e6096;
+        display: inline-block;
+        cursor: pointer;
+        color: #ffffff;
+        font-family: Arial;
+        font-size: 17px;
+        padding: 8px 31px;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #405fad;
+    }
+
+        .myButton:hover {
+            background-color: #476e9e;
+        }
+
+        .myButton:active {
+            position: relative;
+            top: 1px;
+        }
+</style>
+
+@*<br />*@
+@*&nbsp;&nbsp;*@
+
+
+
+<style>
+    .dropbtn {
+        background-color: #7892c2;
+        color: white;
+        padding: 8px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+            .dropdown-content a:hover {
+                background-color: #f1f1f1
+            }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: #7892f9;
+    }
+</style>
+
+<head runat="server">
+    <script>
+        function calculateIMU(cnt, macValue) {
+            newOverRideSell = document.getElementById('overrideSale_' + cnt).value;
+
+            //alert(macValue);
+            //alert('Hi');
+            var newOverRideIMU = ((newOverRideSell - macValue) / macValue) * 100;
+            newOverRideIMU = Math.round(newOverRideIMU * 100) / 100
+
+            document.getElementById('calculatedIMU_' + cnt).value = newOverRideIMU + '%';
+            // alert(newOverRideIMU);
+        }
+    </script>
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(".date-picker").datepicker({
+                dateFormat: 'dd-M-yy'
+            });
+
+        });
+
+    </script>
+
+</head>
+
+
+
+<style>
+    #headerDiv {
+        border-radius: 10px;
+        width: 100%;
+        height: 75px;
+        background: #ef5d74;
+        color: whitesmoke;
+        font-family: Arial;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 75px;
+        font-size: 40px;
+    }
+</style>
+@*<div id="headerDiv">Comp Shops</div>*@
+
+@*<div style="height:8px;font-size:1px;">&nbsp;</div>*@
+
+<div style="align-items:center;width:98%">
+    <form class="example" action="/CompShops" style="margin:auto">
+        <input type="text" placeholder="Search" name="genericSearch">
+        <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+
+    <div style="height:10px;font-size:1px;">&nbsp;</div>
+
+    <style>
+        .collapsible {
+            background-color: #777;
+            color: white;
+            cursor: pointer;
+            padding: 9px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+        }
+
+            .active, .collapsible:hover {
+                background-color: #555;
+            }
+
+        .content {
+            padding: 0 18px;
+            display: block;
+            /* display: none;*/
+            overflow: hidden;
+            background-color: #f1f1f1;
+        }
+    </style>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        form.example input[type=text] {
+            padding: 10px;
+            font-size: 17px;
+            border: 1px solid grey;
+            float: left;
+            width: 90%;
+            background: #f1f1f1;
+        }
+
+        form.example button {
+            float: left;
+            width: 10%;
+            padding: 10px;
+            background: #2196F3;
+            color: white;
+            font-size: 17px;
+            border: 1px solid grey;
+            border-left: none;
+            cursor: pointer;
+        }
+
+            form.example button:hover {
+                background: #0b7dda;
+            }
+
+        form.example::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        section {
+            position: relative;
+            border: 1px solid #000;
+            padding-top: 37px;
+            background: #500;
+        }
+
+            section.positioned {
+                position: absolute;
+                top: 100px;
+                left: 100px;
+                width: 100%;
+                box-shadow: 0 0 15px #333;
+            }
+
+        .container_div {
+            overflow-y: auto;
+            height: 800px;
+        }
+
+        table {
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        td + td {
+            border-left: 1px solid #eee;
+        }
+
+        td, th {
+            border-bottom: 1px solid #eee;
+            background: #ddd;
+            color: #000;
+            padding: 10px 25px;
+        }
+
+        th {
+            height: 0;
+            line-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            color: transparent;
+            border: none;
+            white-space: nowrap;
+        }
+
+            th div {
+                position: absolute;
+                background: transparent;
+                color: #fff;
+                padding: 9px 25px;
+                top: 0;
+                margin-left: -25px;
+                line-height: normal;
+                border-left: 1px solid #800;
+                font-style: normal;
+                font-size: 11px;
+            }
+
+            th:first-child div {
+                border: none;
+            }
+    </style>
+
+    <button class="collapsible"><img src="~/NewFolder/Hamburger.png" height="20" width="25" /> Advanced Search Criteria</button>
+    <div class="content">
+
+        <form asp-controller="CompShops" asp-action="Index" method="get">
+            <div style="max-width:500px">
+                <div style="margin-top:5px">
+                    <div class="form-group">
+                        <font size="3">
+                            <p style="line-height:1.2"><p style="margin-left:10px">
+
+                                Locations serviced out of depot:<select asp-for="SelectedDepot" asp-items="Model.DepotList" class="form-control" stle="width:100;">
+                                    <option value="">All</option>
+                                </select>
+
+                                Dept:<select asp-for="SelectedDept" asp-items="Model.DeptList" class="form-control" stle="width:100;">
+                                    <option value="">All</option>
+                                </select>
+
+                                Category:<select asp-for="SelectedCategory" asp-items="Model.CategoryList" class="form-control">
+                                    <option value="">All</option>
+                                </select>
+
+                                Warehouse/Depot:<select asp-for="SelectedWarehouse" asp-items="Model.WareHouseList" class="form-control">
+                                    <option value="">All</option>
+                                </select>
+
+                                State:<select asp-for="SelectedState" asp-items="Model.StateList" class="form-control">
+                                    <option value="">All</option>
+                                </select>
+
+                                Zip:<select asp-for="SelectedZipCode" asp-items="Model.ZipCodeList" class="form-control">
+                                    <option value="">All</option>
+                                </select>
+
+                                @*Date Future Sells are taking occuring:<select asp-for="SelectedDate" asp-items="Model.DateList" class="form-control">
+                                        <option value="">All</option>
+                                    </select>*@
+
+                                Date Future Sells are taking occuring:@Html.EditorFor(model => model.SelectedFutureDate,
+new { htmlAttributes = new { Value = DateTime.Today,@class = "form-control date-picker" } })
+                                <br />
+
+
+
+                                <label class="switch">
+                                    <input type="checkbox" asp-for="SelectedResult">
+                                    <span class="slider round"></span>
+                                </label>
+                                Show Actionable Records Only
+
+
+                                @*<input type="submit" value="Filter" />*@
+                                <div align="center">
+                                    <input align="center" type="submit" value="Search" class="btn" style="color:whitesmoke;background-color:#0b7dda;width:90px" />
+                                    @*<a asp-action="Create" ><img src="~/NewFolder/Idea.jpg" align="top"  width="90" height="60" /></a>*@
+
+                                </div>
+                        </font>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+
+
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
+
+    @*<div class="dropdown">
+            <button class="dropbtn">Department</button>
+            <div class="dropdown-content">
+                <a href="#">65</a>
+                <a href="#">68</a>
+                <a href="#">70</a>
+                <a href="#">71</a>
+            </div>
+        </div>
+
+
+        &nbsp;&nbsp;
+
+        <div class="dropdown">
+            <button class="dropbtn">Depot</button>
+            <div class="dropdown-content">
+                <a href="#">172</a>
+                <a href="#">175</a>
+                <a href="#">178</a>
+                <a href="#">180</a>
+            </div>
+        </div>*@
+
+
+    &nbsp;&nbsp;
+
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+        input:checked + .slider {
+            background-color: #7892c2;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #7892c2;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+    </style>
+    @{
+
+var cnt = 0;
+    }
+
+
+
+
+    &nbsp;&nbsp;
+    @*<a href="#" class="myButton">Run Comp Shop</a>*@
+
+
+    @*&nbsp;&nbsp;
+        <a href="#" class="myButton">Update iSeries</a>
+
+        <br />
+        <br />*@
+
+    <br />
+
+    <font color="blue" size="3">** Below Costs are based on the date selected in Search section **</font>
+
+    &nbsp;&nbsp;
+    Select Future Sell Date:@Html.EditorFor(model => model.SelectedFutureDate,
+new { htmlAttributes = new { @class = "date-picker" } })
+    &nbsp;&nbsp; &nbsp;&nbsp;
+    <a href="#" class="myButton">Update iSeries</a>
+    &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+    <font color="brown" size="2">
+        <b>Total Records : @Model.compShop.Count</b>
+    </font>
+    <br />
+    <br />
+
+    <section class="">
+        <div class="container_div">
+
+            <table class="table">
+
+                <thead>
+                    <tr class="header">
+                        <th width="2%">
+                            @* Dept # *@
+                            <div>Dept #</div>
+                        </th>
+                        <th width="3%">
+                            @*Item # *@
+                            <div>Item #</div>
+                        </th>
+                        <th width="15%">
+                            @*Item Description *@
+                            <div>Item Description</div>
+                        </th>
+                        <th width="2%">
+                            @*@Html.DisplayNameFor(model => model.compShop[0].WHSE)*@
+                            <div>@Html.DisplayNameFor(model => model.compShop[0].WHSE)</div>
+                        </th>
+                        <th width="3%">
+                            @*@Html.DisplayNameFor(model => model.compShop[0].State)*@
+                            <div>@Html.DisplayNameFor(model => model.compShop[0].State)</div>
+                        </th>
+                        <th width="10%">
+                            @*Cost (MAC, iSeries)*@
+                            <div>Cost (MAC, iSeries)</div>
+                        </th>
+                        <th width="5%">
+                            @*Sell*@
+                            <div>Sell</div>
+                        </th>
+                        <th width="5%">
+                            @*IMU*@
+                            <div>IMU</div>
+                        </th>
+                        <th width="9%">
+                            @* Pending Future Sells*@
+                            <div>Pending Future Sells</div>
+                        </th>
+                        @*<th>
+                                @Html.DisplayNameFor(model => model.FutureSellPrice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FutureSellDate)
+                            </th>*@
+                        <th width="3%">
+                            @*Lowest Comp*@
+                            <div>Lowest Comp</div>
+
+                        </th>
+                        <th width="3%">
+                            @*Max Price*@
+                            <div>Max Price</div>
+                        </th>
+                        <th width="11%">
+                            @*Recommended Future Sell*@
+                            <div>Recommended Future Sell</div>
+                        </th>
+                        <th width="12%">
+                            @*Override Future Sells*@
+                            <div>Override Future Sells</div>
+                        </th>
+                        @*<th>
+                                @Html.DisplayNameFor(model => model.NewSell)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.NewPrice)
+                            </th>*@
+
+                        <th width="14%">
+                            @* Competitors*@
+                            <div>Competitors</div>
+                        </th>
+
+
+                        @*<th>
+                                @Html.DisplayNameFor(model => model.SamsConvPrice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SamsShelfPrice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SamsAddtnPrice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SamsShoppedURL)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SamsShoppedZip)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BJsConvPrice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BJsShelfPrice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BJsAddtnPrice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BJsShoppedURL)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BJsShoppedZip)
+                            </th>*@
+                        @*<th>
+                                 Buyer #
+                                <div>Buyer #</div>
+                            </th>*@
+                        <th width="3%">
+                            @* @Html.DisplayNameFor(model => model.compShop[0].Category)*@
+                            <div>@Html.DisplayNameFor(model => model.compShop[0].Category)</div>
+                        </th>
+                        @*<th>
+                                 Comments
+                                <div>Comments</div>
+                            </th>
+                            <th>
+                                Date & Time
+                                <div>Date & Time</div>
+                            </th>*@
+
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.compShop)
+{
+
+                    @if (Convert.ToDouble(item.LowestComp.Substring(1, item.LowestComp.Length - 1)) > Convert.ToDouble(item.Sell.Substring(1, item.Sell.Length - 1)))
+{
+                    <tr>
+                        <td width="2%">
+                            @Html.DisplayFor(modelItem => item.Dept)
+                        </td>
+                        <td width="3%">
+                            @Html.DisplayFor(modelItem => item.ItemNo)
+                        </td>
+                        <td width="15%">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td width="2%">
+                            @Html.DisplayFor(modelItem => item.WHSE)
+                        </td>
+                        <td width="3%">
+                            @Html.DisplayFor(modelItem => item.State)
+                        </td>
+                        <td width="10%">
+                            @Html.DisplayFor(modelItem => item.MAC)
+                        </td>
+                        <td width="5%">
+                            @Html.DisplayFor(modelItem => item.Sell)
+                        </td>
+                        <td width="5%">
+                            @Html.DisplayFor(modelItem => item.IMU)
+                        </td>
+                        <td width="9%">
+                            Price: @Html.DisplayFor(modelItem => item.FutureSellPrice)<br />
+                            Date: @Html.DisplayFor(modelItem => item.FutureSellDate)
+                        </td>
+                        @*<td width="%">
+                                @Html.DisplayFor(modelItem => item.FutureSellPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.FutureSellDate)
+                            </td>*@
+                        <td width="3%">
+                            @Html.DisplayFor(modelItem => item.LowestComp)
+                        </td>
+                        <td width="3%">
+                            @Html.DisplayFor(modelItem => item.MaxPrice)
+                        </td>
+                        <td width="11%">
+                            New Sell: @Html.DisplayFor(modelItem => item.NewSell)<br />
+                            New IMU: @Html.DisplayFor(modelItem => item.NewPrice)
+                        </td>
+                        <td width="12%">@*<input type="text" placeholder="$"/>*@</td>
+                        @*<td width="%">
+                                @Html.DisplayFor(modelItem => item.NewSell)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.NewPrice)
+                            </td>*@
+                        <td width="14%">
+                            <details style="width:auto">
+                                <summary>Sam's Club (@Html.DisplayFor(modelItem => item.SamsConvPrice))</summary>
+                                Convert: @Html.DisplayFor(modelItem => item.SamsConvPrice)<br />
+                                Shelf: @Html.DisplayFor(modelItem => item.SamsShelfPrice)<br />
+                                Additional: @Html.DisplayFor(modelItem => item.SamsAddtnPrice)<br />
+                                URL: <a target="_blank" href=@Html.DisplayFor(modelItem => item.SamsShoppedURL)>Link</a><br />
+                                Zip: @Html.DisplayFor(modelItem => item.SamsShoppedZip)
+                            </details>
+                            <details style="width:auto">
+                                <summary>BJ's Club (@Html.DisplayFor(modelItem => item.BJsConvPrice))</summary>
+                                Convert: @Html.DisplayFor(modelItem => item.BJsConvPrice)<br />
+                                Shelf: @Html.DisplayFor(modelItem => item.BJsShelfPrice)<br />
+                                Additional: @Html.DisplayFor(modelItem => item.BJsAddtnPrice)<br />
+                                URL: <a target="_blank" href=@Html.DisplayFor(modelItem => item.BJsShoppedURL)>Link</a><br />
+                                Zip: @Html.DisplayFor(modelItem => item.BJsShoppedZip)
+                            </details>
+                            <details style="width:auto">
+                                <summary>Target ()</summary>
+                                Convert: <br />
+                                Shelf: <br />
+                                Additional: <br />
+                                URL: <a target="_blank" href="">Link</a><br />
+                                Zip:
+                            </details>
+                            <details style="width:auto">
+                                <summary>Fred Meyer ()</summary>
+                                Convert: <br />
+                                Shelf: <br />
+                                Additional: <br />
+                                URL: <a target="_blank" href="">Link</a><br />
+                                Zip:
+                            </details>
+                            <details style="width:auto">
+                                <summary>Amazon ()</summary>
+                                Convert: <br />
+                                Shelf: <br />
+                                Additional: <br />
+                                URL: <a target="_blank" href="">Link</a><br />
+                                Zip:
+                            </details>
+
+                        </td>
+
+                        @*<td width="%">
+                                @Html.DisplayFor(modelItem => item.SamsConvPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.SamsShelfPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.SamsAddtnPrice)
+                            </td>
+                            <td width="%">
+                                <a href=@Html.DisplayFor(modelItem => item.SamsShoppedURL)>Link</a>
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.SamsShoppedZip)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.BJsConvPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.BJsShelfPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.BJsAddtnPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.BJsShoppedURL)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.BJsShoppedZip)
+                            </td>*@
+                        @*<td width="%">
+                                @Html.DisplayFor(modelItem => item.BuyerNo)
+                            </td>*@
+                        <td width="3%">
+                            @Html.DisplayFor(modelItem => item.Category)
+                        </td>
+                        @*<td width="%">
+                                @Html.DisplayFor(modelItem => item.BuyerComments)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.PulledDate)
+                            </td>*@
+                        @*<td width="%">
+                                <a asp-action="Edit" asp-route-id="@item.CompShopId">Edit</a>
+                            </td>*@
+                    </tr>
+}
+else
+{
+
+                    <tr>
+
+
+                        <td width="2%">
+                            @Html.DisplayFor(modelItem => item.Dept)
+                        </td>
+                        <td width="3%">
+                            @Html.DisplayFor(modelItem => item.ItemNo)
+                        </td>
+                        <td width="15%">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td width="2%">
+                            @Html.DisplayFor(modelItem => item.WHSE)
+                        </td>
+                        <td width="3%">
+                            @Html.DisplayFor(modelItem => item.State)
+                        </td>
+                        <td width="10%">
+                            @Html.DisplayFor(modelItem => item.MAC)
+                        </td>
+                        <td width="5%">
+                            <mark><font color="red"><b>@Html.DisplayFor(modelItem => item.Sell)</b></font></mark>
+                        </td>
+                        <td width="5%">
+                            @Html.DisplayFor(modelItem => item.IMU)
+                        </td>
+                        <td width="9%">
+
+                            Price: @Html.DisplayFor(modelItem => item.FutureSellPrice)<br />
+                            Date: @Html.DisplayFor(modelItem => item.FutureSellDate)
+
+                        </td>
+                        @*<td width="%">
+                                @Html.DisplayFor(modelItem => item.FutureSellPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.FutureSellDate)
+                            </td>*@
+                        <td width="3%">
+                            <mark><font color="red"><b>@Html.DisplayFor(modelItem => item.LowestComp)</b></font></mark>
+                        </td>
+                        <td width="3%">
+                            @Html.DisplayFor(modelItem => item.MaxPrice)
+                        </td>
+                        <td width="11%">
+                            @{
+var newSell = @Math.Round((Decimal)(Convert.ToDouble(item.LowestComp.Substring(1, item.LowestComp.Length - 1)) - 0.10), 2);
+
+var MACValue = (Decimal)0.0;
+var newIMU = (Decimal)0.0;
+if (item.MAC != "$")
+{
+MACValue = @Math.Round((Decimal)(Convert.ToDouble(item.MAC.Substring(1, item.MAC.Length - 1))), 2);
+
+newIMU = @Math.Round((Decimal)(((newSell - MACValue) / MACValue) * 100), 2);
+}
+                            }
+                            <mark>
+                                <font color="Green" size="2">
+                                    <b>
+                                        New Sell: $@newSell<br />
+                                        New IMU:   @newIMU %
+                                    </b>
+                                </font>
+                            </mark>
+                        </td>
+                        <td width="12%">
+                            <mark>Override Price: <br /></mark><input id="overrideSale_@cnt" width="5" type="text" maxlength="8" placeholder="$" value="@newSell" onchange="calculateIMU(@cnt, @MACValue)" /> <br /> <br />
+                            <mark>Calculated IMU: <br /></mark><input id="calculatedIMU_@cnt" width="5" type="text" value="@newIMU%" disabled="disabled" />
+                        </td>
+                        @{
+cnt++;
+                        }
+                        @*<td width="%">
+                                @Html.DisplayFor(modelItem => item.NewSell)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.NewPrice)
+                            </td>*@
+                        <td width="14%">
+                            <details style="width:auto;">
+                                <summary>Sam's Club (@Html.DisplayFor(modelItem => item.SamsConvPrice))</summary>
+                                Convert: @Html.DisplayFor(modelItem => item.SamsConvPrice)<br />
+                                Shelf: @Html.DisplayFor(modelItem => item.SamsShelfPrice)<br />
+                                Additional: @Html.DisplayFor(modelItem => item.SamsAddtnPrice)<br />
+                                URL: <a target="_blank" href=@Html.DisplayFor(modelItem => item.SamsShoppedURL)>Link</a><br />
+                                Zip: @Html.DisplayFor(modelItem => item.SamsShoppedZip)
+                            </details>
+                            <details style="width:auto;">
+                                <summary>BJ's Club (@Html.DisplayFor(modelItem => item.BJsConvPrice))</summary>
+                                Convert: @Html.DisplayFor(modelItem => item.BJsConvPrice)<br />
+                                Shelf: @Html.DisplayFor(modelItem => item.BJsShelfPrice)<br />
+                                Additional: @Html.DisplayFor(modelItem => item.BJsAddtnPrice)<br />
+                                URL: <a target="_blank" href=@Html.DisplayFor(modelItem => item.BJsShoppedURL)>Link</a><br />
+                                Zip: @Html.DisplayFor(modelItem => item.BJsShoppedZip)
+                            </details>
+                            <details style="width:auto">
+                                <summary>Target ()</summary>
+                                Convert: <br />
+                                Shelf: <br />
+                                Additional: <br />
+                                URL: <a target="_blank" href="">Link</a><br />
+                                Zip:
+                            </details>
+                            <details style="width:auto">
+                                <summary>Fred Meyer ()</summary>
+                                Convert: <br />
+                                Shelf: <br />
+                                Additional: <br />
+                                URL: <a target="_blank" href="">Link</a><br />
+                                Zip:
+                            </details>
+                            <details style="width:auto">
+                                <summary>Amazon ()</summary>
+                                Convert: <br />
+                                Shelf: <br />
+                                Additional: <br />
+                                URL: <a target="_blank" href="">Link</a><br />
+                                Zip:
+                            </details>
+                        </td>
+                        @*<td width="%">
+                                @Html.DisplayFor(modelItem => item.SamsConvPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.SamsShelfPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.SamsAddtnPrice)
+                            </td>
+                            <td width="%">
+                                <a href=@Html.DisplayFor(modelItem => item.SamsShoppedURL)>Link</a>
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.SamsShoppedZip)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.BJsConvPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.BJsShelfPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.BJsAddtnPrice)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.BJsShoppedURL)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.BJsShoppedZip)
+                            </td>*@
+                        @*<td width="%">
+                                @Html.DisplayFor(modelItem => item.BuyerNo)
+                            </td>*@
+                        <td width="3%">
+                            @Html.DisplayFor(modelItem => item.Category)
+                        </td>
+                        @*<td width="%">
+                                @Html.DisplayFor(modelItem => item.BuyerComments)
+                            </td>
+                            <td width="%">
+                                @Html.DisplayFor(modelItem => item.PulledDate)
+                            </td>*@
+                        @*<td width="%">
+                                <a asp-action="Edit" asp-route-id="@item.CompShopId">Override</a>
+                            </td>*@
+                    </tr>
+
+        }
+        }
+                </tbody>
+            </table>
+        </div>
+    </section>

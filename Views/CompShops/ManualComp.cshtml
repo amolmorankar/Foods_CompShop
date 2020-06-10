@@ -1,0 +1,316 @@
+﻿@model Foods_CompShop.Models.CompShop
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+
+    <style>
+        #headerDiv {
+            border-radius: 10px;
+            width: 100%;
+            height: 100px;
+            background: #ef5d74;
+            color: whitesmoke;
+            font-family: Arial;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 100px;
+            font-size: 40px;
+        }
+    </style>
+    <a class="nav-link text-dark" asp-area="" asp-controller="Ideas" asp-action="Index">
+        <div id="headerDiv">Manual Comp Shop</div>
+    </a>
+
+    <div style="height:8px;font-size:1px;">&nbsp;</div>
+    <div style="align-items:center;width:98%">
+        <!-- Client side libs required  -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/blueimp-gallery/2.25.2/css/blueimp-gallery.min.css" crossorigin="anonymous">
+
+        <style>
+            html {
+                font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            }
+
+            main {
+                margin: 20px;
+            }
+
+            #gallery-note {
+                font-size: smaller
+            }
+
+            .blueimp-gallery {
+                margin: 25px;
+                max-width: 150px;
+                padding-bottom: 150px;
+            }
+
+            .dropzone {
+                border: 3px dashed #00a1f1;
+                background: #F0F8FF;
+                margin: 25px;
+                border-radius: 5px;
+                max-width: 400px;
+            }
+
+                .dropzone .dz-message {
+                    font-weight: 200
+                }
+
+                    .dropzone .dz-message .note {
+                        font-family: sans-serif;
+                        font-size: 18px;
+                        font-weight: 200;
+                        display: block;
+                        margin-top: 1.5rem;
+                    }
+        </style>
+
+        <script type="text/javascript">
+            function timedRefresh(timeoutPeriod) {
+                setTimeout(function () {
+                    location.reload(true);
+                }, timeoutPeriod);
+            }
+        </script>
+
+
+        <main>
+
+            <div class="box content">
+                <hr>
+                <div>
+                    <form action="/api/images/upload"
+                          class="dropzone needsclick dz-clickable"
+                          id="image-upload"
+                          method="post">
+
+                        <div class="dz-message needsclick">
+                            <span class="note needsclick">
+                                Drop photos/videos for yor idea here or click to upload.
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-gallery/2.25.2/js/blueimp-gallery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+
+
+        <script>
+            // init gallery for later use
+            var gallery;
+
+            // Grab links for images from backend api
+            function fetchImageLinks() {
+                // Fetch images
+                $.get("api/Images/thumbnails", function (fetchedImageLinks) {
+                    console.log(fetchedImageLinks)
+
+                    // Check if anything is in there
+                    if (_.isEmpty(fetchedImageLinks)) {
+                        console.log('empty fetched')
+                        // do nothing
+                    } else {
+                        // Check if we have a gallery initialized
+                        if (_.isEmpty(gallery)) {
+                            // initialize gallery
+                            gallery = blueimp.Gallery(
+                                fetchedImageLinks, // gallery links array
+                                {
+                                    container: '#blueimp-gallery-carousel',
+                                    carousel: true
+                                } // gallery options
+                            );
+                        } else {
+                            // check if images are equal to array
+                            console.log('currently in gallery:')
+                            console.log(gallery.list)
+                            var imageLinksEqual = _.isEqual(_.sortBy(gallery.list.map(s => s.split("?")[0])), _.sortBy(fetchedImageLinks.map(s => s.split("?")[0])))
+                            if (imageLinksEqual) {
+                                console.log('images arr are equal')
+                                // do nothing
+                            } else {
+                                console.log('images arr are not equal')
+
+                                // update gallery with new image urls. Only compare actual url without SAS token query string
+                                var newImageLinks = _.difference(fetchedImageLinks.map(s => s.split("?")[0]), gallery.list.map(s => s.split("?")[0]))
+
+                                console.log('differene is: ')
+                                console.log(newImageLinks)
+                                // Only add new images
+                                gallery.add(newImageLinks);
+
+                                // Force image load
+                                gallery.next();
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Start first interval
+            fetchImageLinks()
+
+            setInterval(function () {
+                fetchImageLinks()
+            }, 5000)
+
+            /* Dropzone */
+            // "imageUpload" is the camelized version of the HTML element's ID
+            Dropzone.options.imageUpload = {
+                paramName: "files", // The name that will be used to transfer the file
+                dictDefaultMessage: "Drop photos/videos here or Click to Upload",
+                addRemoveLinks: true, // Allows for cancellation of file upload and remove thumbnail
+                init: function () {
+                    myDropzone = this;
+                    myDropzone.on("success", function (file, response) {
+                        console.log("Success");
+                        myDropzone.removeFile(file);
+                    });
+                }
+            };
+        </script>
+
+        <div align="center" class="form-group">
+            <a asp -for="imageURL" target="_blank" href="@TempData["uploadedUri"] ">
+                <img src="@TempData["uploadedUri"]" width="130" height="130" alt="Image will be shown after upload">
+            </a>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*
+        <h1>Details</h1>
+
+
+
+
+    <div>
+        <h4>CompShop</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Dept)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.Dept)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ItemNo)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.Description)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.WHSE)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.MAC)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Sell)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.IMU)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.FutureSellPrice)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.FutureSellDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.LowestComp)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.MaxPrice)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.NewSell)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.NewPrice)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.SamsConvPrice)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.SamsShelfPrice)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.SamsAddtnPrice)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.SamsShoppedURL)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.SamsShoppedZip)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.BJsConvPrice)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BJsShelfPrice)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.BJsAddtnPrice)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BJsShoppedURL)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.BJsShoppedZip)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BuyerNo)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.Category)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BuyerComments)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayNameFor(model => model.PulledDate)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.CompShopId">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>*@
